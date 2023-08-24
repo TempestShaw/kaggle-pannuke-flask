@@ -1,0 +1,141 @@
+
+{% block title %}Pannuke{% endblock %}
+<link rel="stylesheet" type="text/css" href="/static/carousel.css">
+
+<body>
+    {% block content %}
+    <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class=""
+                aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"
+                class=""></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3" class="active"
+                aria-current="true"></button>
+        </div>
+        <div class="carousel-inner">
+            <div style="background-color:black"  class="carousel-item">
+                <img style="opacity: 0.5;"width="100%"height="400px" src="/static/images/carousel1.jpeg">
+
+                <div class="container">
+                    <div class="carousel-caption text-start">
+                        <h1>Investment Funds.</h1>
+                        <p>Looking for the right fund requires considerable research and strong understanding of financial markets and strategies. </p>
+                        
+                    </div>
+                </div>
+            </div>
+            <div style="background-color:black" class="carousel-item">
+                <img style="opacity: 0.5;"width="100%"height="400px" src="/static/images/carousel2.jpeg">
+
+                <div class="container">
+                    <div class="carousel-caption">
+                        <h1>Derivatives.</h1>
+                        <p>We provide a selection of over-the-counter option investment products on foreign exchange, securities and precious metals.</p>
+                        
+                    </div>
+                </div>
+            </div>
+            <div style="background-color:black" class="carousel-item active">
+                <img style="opacity: 0.5;"width="100%"height="400px" src="/static/images/carousel3.jpeg">
+
+                <div class="container">
+                    <div class="carousel-caption text-end">
+                        <h1>Structured Products.</h1>
+                        <p>Various structured deposits and structured notes are available, offering you the luxury of choice for your investment portfolio.</p>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <div class="container marketing">
+
+        <!-- Three columns of text below the carousel -->
+        <div style="display:grid;text-align: center;"class="row">
+            <div style="margin:auto;width:auto;margin-top: 20px;"class="col-lg-4">
+                <img width="auto"height="auto" src="/static/images/CEO.png">
+
+                <h1 class="fw-normal">CEO</h1>
+                <p span class="text-muted" style="font-size:30px;">KWONG, Pang Choi</span> </p>
+                <p>Proven strong numerical and analytical skills. excellent team work and team leadership skills. communication and interpersonal skills. project and time management ability.</p>
+
+            </div><!-- /.col-lg-4 -->
+        <div style="margin:auto;width:auto;margin-top: 20px"class="col-lg-4">
+            <img width="260"height="350" src="/static/images/CFO.jpg">
+
+            <h2 class="fw-normal">CFO</h2>
+            <p span class="text-muted" style=font-size:30px;">CHEN, Wenqi</span> </p>
+            <p>In charge of a wide variety of activities that impact a company’s growth. It takes a lot of effort and determination to rise to the top of a company’s financial hierarchy. </p>
+
+        </div><!-- /.col-lg-4 -->
+            
+        </div><!-- /.row -->
+
+
+        <!-- START THE FEATURETTES -->
+
+        <hr class="featurette-divider">
+
+        <div class="row featurette">
+            <div class="col-md-7">
+                <h1 class="featurette-heading fw-normal lh-1">CTO </h1>
+                <p span class="text-muted" style="font-size:30px;">CHEN, Xingze</span> </p>
+                <p class="lead">we have built a Core/Satellite Investment Framework to enable you to achieve your strategic goals and take full advantage of market opportunities as they present themselves. Our flexible investment approach to portfolio structuring is both disciplined and intuitive, providing the greatest potential for exceptional performance.</p>
+            </div>
+            <div class="col-md-5">
+                <img width="300"height="380" src="/static/images/CTO.jpeg">
+
+            </div>
+        </div>
+
+        <hr class="featurette-divider">
+
+        <div class="row featurette">
+            <div class="col-md-7 order-md-2">
+                <h1 class="featurette-heading fw-normal lh-1">COO </h1>
+                <p span class="text-muted" style="font-size:30px;">Fu, Meng</span></p>
+                <p class="lead">Our vast experience and global expertise enable us to take advantage of this unique strength as one of the world's premier RMB banks. We are able to offer our clients varied and exclusive RMB products and services that facilitate enjoying the benefits of a strong and increasingly global currency with a bright future.</p>
+            </div>
+            <div class="col-md-5 order-md-1">
+                <img width="280"height="330" src="/static/images/COO.jpeg">
+
+            </div>
+        </div>
+
+        <hr class="featurette-divider">
+
+        <div class="row featurette">
+            <div class="col-md-7">
+                <h1 class="featurette-heading fw-normal lh-1">CMO </h1>
+                    <p> <span class="text-muted" style="font-size:30px;">KWOK, Hiu Lam Natalie</span></p>
+                <p class="lead">With spot, forward and non-deliverable forward rates on a wide range of foreign currencies, as well as foreign exchange margin trading services, we can help you make the best of foreign investment opportunities all around the world.
+                </p>
+            </div>
+            <div class="col-md-5">
+                <img width="300"height="380" src="/static/images/CMO.jpeg">
+
+            </div>
+        </div>
+
+        <hr class="featurette-divider">
+
+        <!-- /END THE FEATURETTES -->
+
+    </div>
+   
+    {% endblock %}
+    <script src="/docs/5.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
