@@ -10,20 +10,14 @@ api_blueprint = Blueprint('api', __name__)
 
 @api_blueprint.route('/api/random/')
 def random_image():
-    image_array = {np.random(256, 256, 6)}
-    fig, ax = plt.subplots()
-    ax.imshow(image_array, cmap='gray')
-    ax.axis('off')
-
-    # save image into io
-    image_stream = io.BytesIO()
-    plt.savefig(image_stream, format='png')
-    image_stream.seek(0)
-
+    #sample/class
+    randomclass = np.random.randint(1,6)
+    randomimage = np.random.randint(1,6)
+    tissue= request.args.get('tissue')
     # call analyze api
-    response = requests.post(
-        'http://localhost:5000/api/analyze_image', files={'file': image_array})
-
+    req={
+        "count"
+    }
     if response.status_code == 200:
         cell_counts = response.json()
         # tackle with API response
