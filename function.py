@@ -31,7 +31,18 @@ def DataInit():
     df_ttype = pd.concat([df_ttype1, df_ttype2, df_ttype3], axis=0)
     df_ttype.reset_index(inplace=True)
     df_ttype.rename(columns={'index': 'IndexAtDataSet'}, inplace=True)
-    return df_ttype
+    df_ttype.rename(columns={'0': 'tissueType'}, inplace=True)
+    data_dict ={
+        'df_img1':df_img1,
+        'df_img2':df_img2,
+        'df_img3':df_img3,
+        'df_mask1':df_mask1,
+        'df_mask2':df_mask2,
+        'df_mask3':df_mask3,
+        'df_ttype':df_ttype,
+
+    }
+    return data_dict
 
 
 def get_cell_count(image_file):

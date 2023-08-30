@@ -11,7 +11,7 @@ api_blueprint = Blueprint('api', __name__)
 
 @api_blueprint.route('/api/random/')
 def random_image():
-    df_ttype=DataInit()
+    df_ttype=DataInit()['df_ttype']
     # sample/class
     # get tissue
     tissue = request.args.get('tissue')
@@ -21,6 +21,7 @@ def random_image():
     #create json request
     slide = selected_row["IndexAtDataSet"]
     dataSet= selected_row['dataset']
+    count=len(selected_df)
     # call analyze api
     req = {
         "count": count,
@@ -32,9 +33,12 @@ def random_image():
     return json_request
 
 
-@api_blueprint.route('/api/slide/<image>/', methods=['POST'])
+@api_blueprint.route('/api/slide/<dataset>/<image>/', methods=['POST'])
 def generate_image(image):
     # 通过NumPy生成图像
+    dataset=request.args.get('dataset')
+    imageid=request.args.get('image')
+    df_ttype=DataInit()['df_img'+dataset]
     image_array = {image}
     fig, ax = plt.subplots()
     ax.imshow(image_array, cmap='gray')
