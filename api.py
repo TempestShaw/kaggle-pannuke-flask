@@ -1,33 +1,35 @@
 import io
+import json
 from flask import Blueprint, request, jsonify, send_file
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import requests
-
+from function import *
 api_blueprint = Blueprint('api', __name__)
 
 
 @api_blueprint.route('/api/random/')
 def random_image():
+    df_ttype=DataInit()
     # sample/class
     # get tissue
     tissue = request.args.get('tissue')
-    # get selected dataframe with specify tissue col
-    selected_df = df_ttype[df_ttype['tissue_type'] == tissue]
-    count = len(selected_df)
-    selected_row = selected_df[np.random.randint(0, count)]
+    selected_df = df_ttype[df_ttype['tissue_type'] == tissue] if tissue else df_ttype
+        # get selected dataframe with specify tissue col
+    selected_row = selected_df.sample(n=1)
+    #create json request
     slide = selected_row["IndexAtDataSet"]
-
+    dataSet= selected_row['dataset']
     # call analyze api
     req = {
         "count": count,
-        "slide": f"api/slide/{slide}",
-
+        "slide": f"api/slide/{dataSet}/{slide}",
+        "overlays":[ f"api/overlay/{dataSet}/{slide}/{i}" for i in range(5)]
     }
-
+    json_request = json.dumps(req, indent = 4)
     # 返回图像文件
-    return send_file(image_stream, mimetype='image/png'), cell_counts
+    return json_request
 
 
 @api_blueprint.route('/api/slide/<image>/', methods=['POST'])
@@ -53,7 +55,6 @@ def generate_image(image):
 
     else:
         pass
-    # 返回图像文件
     return send_file(image_stream, mimetype='image/png'), cell_counts
 
 
