@@ -10,20 +10,22 @@ api_blueprint = Blueprint('api', __name__)
 
 @api_blueprint.route('/api/random/')
 def random_image():
-    #sample/class
-    randomclass = np.random.randint(1,6)
-    randomimage = np.random.randint(1,6)
-    tissue= request.args.get('tissue')
-    # call analyze api
-    req={
-        "count"
-    }
-    if response.status_code == 200:
-        cell_counts = response.json()
-        # tackle with API response
+    # sample/class
+    # get tissue
+    tissue = request.args.get('tissue')
+    # get selected dataframe with specify tissue col
+    selected_df = df_ttype[df_ttype['tissue_type'] == tissue]
+    count = len(selected_df)
+    selected_row = selected_df[np.random.randint(0, count)]
+    slide = selected_row["IndexAtDataSet"]
 
-    else:
-        pass
+    # call analyze api
+    req = {
+        "count": count,
+        "slide": f"api/slide/{slide}",
+
+    }
+
     # 返回图像文件
     return send_file(image_stream, mimetype='image/png'), cell_counts
 
