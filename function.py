@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-datasetpath = '../../../MachineLearning/Dataset/Kaggle'
+datasetpath = '../../MachineLearning/Dataset/Kaggle'
 
 
 def DataInit():

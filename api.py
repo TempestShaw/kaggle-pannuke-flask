@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import requests
+import cv2
 from function import *
 api_blueprint = Blueprint('api', __name__)
 
@@ -19,10 +20,10 @@ def random_image():
         # get selected dataframe with specify tissue col
     selected_row = selected_df.sample(n=1)
     #create json request
-    slide = selected_row["IndexAtDataSet"]
-    dataSet= selected_row['dataset']
+    slide = str(selected_row["IndexAtDataSet"].item())
+    dataSet= str(selected_row['dataset'].item())   
     count=len(selected_df)
-    # call analyze api
+    # call analyze api 
     req = {
         "count": count,
         "slide": f"api/slide/{dataSet}/{slide}",
@@ -34,33 +35,23 @@ def random_image():
 
 
 @api_blueprint.route('/api/slide/<dataset>/<image>/', methods=['POST'])
-def generate_image(image):
+def generate_image(dataset,image):
     # 通过NumPy生成图像
-    dataset=request.args.get('dataset')
-    imageid=request.args.get('image')
-    df_ttype=DataInit()['df_img'+dataset]
-    image_array = {image}
-    fig, ax = plt.subplots()
-    ax.imshow(image_array, cmap='gray')
-    ax.axis('off')
+    Image_array=DataInit()['df_img'+str(dataset)]
+    Image_array=Image_array[int(image)].astype(np.uint8)
+    img_encode=cv2.imencode('.png',Image_array)[1]
+    Random_Image=img_encode.tobytes()
+    return Random_Image
 
-    # save image into io
-    image_stream = io.BytesIO()
-    plt.savefig(image_stream, format='png')
-    image_stream.seek(0)
 
-    # call analyze api
-    response = requests.post(
-        'http://localhost:5000/api/analyze_image', files={'file': image_array})
-
-    if response.status_code == 200:
-        cell_counts = response.json()
-        # tackle with API response
-
-    else:
-        pass
-    return send_file(image_stream, mimetype='image/png'), cell_counts
-
+@api_blueprint.route('/api/overlay/<dataset>/<image>/<class_id>', methods=['POST'])
+def generate_mask(dataset,image,class_id):
+    # 通过NumPy生成图像
+    Image_array=DataInit()['df_mask'+str(dataset)]
+    Image_array=Image_array[int(image)][:,:,int(class_id)].astype(np.uint8)
+    img_encode=cv2.imencode('.png',Image_array)[1]
+    ImageMask=img_encode.tobytes()
+    return ImageMask
 
 @api_blueprint.route('/api/analyze_image', methods=['POST'])
 def analyze_image():
