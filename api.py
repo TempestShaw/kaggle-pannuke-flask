@@ -43,7 +43,7 @@ def generate_image(dataset,image):
     img_encode=cv2.imencode('.png',Image_array)[1]
     Random_Image=img_encode.tobytes()
     imgResponse=make_response(Random_Image)
-    imgResponse.headers.set("Content-Type", "image/jpeg")
+    imgResponse.headers.set("Content-Type", "image/png")
     return imgResponse
 
 
@@ -55,7 +55,7 @@ def generate_mask(dataset,image,class_id):
     img_encode=cv2.imencode('.png',Image_array)[1]
     ImageMask=img_encode.tobytes()
     imgResponse=make_response(ImageMask)
-    imgResponse.headers.set("Content-Type", "image/jpeg")
+    imgResponse.headers.set("Content-Type", "image/png")
     return imgResponse
 
 @api_blueprint.route('/api/analyze_image', methods=['POST'])
