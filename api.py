@@ -1,18 +1,19 @@
 import io
 import json
-from flask import Blueprint, request, jsonify, send_file
+from flask import Blueprint, request, jsonify, make_response
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import requests
 import cv2
+import email.mime.image
 from function import *
 api_blueprint = Blueprint('api', __name__)
-
+data_dict=DataInit()
 
 @api_blueprint.route('/api/random/')
 def random_image():
-    df_ttype=DataInit()['df_ttype']
+    df_ttype=data_dict['df_ttype']
     # sample/class
     # get tissue
     tissue = request.args.get('tissue')
@@ -37,21 +38,25 @@ def random_image():
 @api_blueprint.route('/api/slide/<dataset>/<image>/', methods=['POST'])
 def generate_image(dataset,image):
     # 通过NumPy生成图像
-    Image_array=DataInit()['df_img'+str(dataset)]
+    Image_array=data_dict['df_img'+str(dataset)]
     Image_array=Image_array[int(image)].astype(np.uint8)
     img_encode=cv2.imencode('.png',Image_array)[1]
     Random_Image=img_encode.tobytes()
-    return Random_Image
+    imgResponse=make_response(Random_Image)
+    imgResponse.headers.set("Content-Type", "image/jpeg")
+    return imgResponse
 
 
 @api_blueprint.route('/api/overlay/<dataset>/<image>/<class_id>', methods=['POST'])
 def generate_mask(dataset,image,class_id):
     # 通过NumPy生成图像
-    Image_array=DataInit()['df_mask'+str(dataset)]
+    Image_array=data_dict['df_mask'+str(dataset)]
     Image_array=Image_array[int(image)][:,:,int(class_id)].astype(np.uint8)
     img_encode=cv2.imencode('.png',Image_array)[1]
     ImageMask=img_encode.tobytes()
-    return ImageMask
+    imgResponse=make_response(ImageMask)
+    imgResponse.headers.set("Content-Type", "image/jpeg")
+    return imgResponse
 
 @api_blueprint.route('/api/analyze_image', methods=['POST'])
 def analyze_image():
