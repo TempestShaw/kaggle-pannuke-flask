@@ -35,7 +35,7 @@ def random_image():
     return json_request
 
 
-@api_blueprint.route('/api/slide/<dataset>/<image>/', methods=['POST'])
+@api_blueprint.route('/api/slide/<string:dataset>/<string:image>/', methods=['POST'])
 def generate_image(dataset,image):
     # 通过NumPy生成图像
     Image_array=data_dict['df_img'+str(dataset)]
@@ -47,7 +47,7 @@ def generate_image(dataset,image):
     return imgResponse
 
 
-@api_blueprint.route('/api/overlay/<dataset>/<image>/<class_id>', methods=['POST'])
+@api_blueprint.route('/api/overlay/<string:dataset>/<string:image>/<class_id>', methods=['POST'])
 def generate_mask(dataset,image,class_id):
     # 通过NumPy生成图像
     Image_array=data_dict['df_mask'+str(dataset)]
@@ -55,6 +55,42 @@ def generate_mask(dataset,image,class_id):
     img_encode=cv2.imencode('.png',Image_array)[1]
     ImageMask=img_encode.tobytes()
     imgResponse=make_response(ImageMask)
+    imgResponse.headers.set("Content-Type", "image/png")
+    return imgResponse
+
+@api_blueprint.route('/api/slide-mask/<string:dataset>/<string:image>/', methods=['POST'])
+def generate_maskimage(dataset,image):
+    colorList=[(255, 0, 0),(0, 255, 0),(0, 0, 255),(255, 255, 0),(255, 0, 255)]
+    #Call api
+    dataset_str = str(dataset)
+    image_str = str(image)
+    api_url = f'http://127.0.0.1:5000/api/slide/{dataset_str}/{image_str}/'
+    response = requests.post(api_url)
+    if response.status_code == 200:
+        image_np = np.frombuffer(response.content, np.uint8)
+        originalImage = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
+
+    mergedImage = np.zeros((256, 256, 4), dtype=np.uint8)
+    mergedImage[:, :, 0:3] = originalImage
+    for index in range(5):
+        
+        #Call api
+        response = requests.post(f'http://127.0.0.1:5000/api/overlay/{dataset_str}/{image_str}/{index}')
+        if response.status_code == 200:
+            image_np = np.frombuffer(response.content, np.uint8)
+            layerColor = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
+            # layer = cv2.cvtColor(layer, cv2.COLOR_BGR2GRAY)
+            # layerColor = cv2.cvtColor(layer, cv2.COLOR_GRAY2BGR)
+            print(layerColor)
+            df = pd.DataFrame(layerColor.reshape(256,256*3))
+            df.to_csv('data.csv', index=False)
+            layerColor[np.where((layerColor > [0, 0, 0]).all(axis=2))] = colorList[index]
+
+        originalImage = cv2.addWeighted(originalImage, 1, layerColor, 0.5, 0)
+        
+    img_encode=cv2.imencode('.png',originalImage)[1]
+    ImageWithMask=img_encode.tobytes()
+    imgResponse=make_response(ImageWithMask)
     imgResponse.headers.set("Content-Type", "image/png")
     return imgResponse
 
